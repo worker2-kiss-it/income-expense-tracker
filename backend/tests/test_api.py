@@ -1,22 +1,6 @@
 import pytest
 from httpx import AsyncClient, ASGITransport
 from app.main import app
-from app.database import engine, Base, async_session
-from app.models.entry import Category, Project
-
-
-@pytest.fixture(autouse=True)
-async def setup_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    async with async_session() as session:
-        session.add(Category(name="Büro"))
-        session.add(Category(name="Software"))
-        session.add(Project(name="DeFi"))
-        await session.commit()
-    yield
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
 
 
 @pytest.mark.asyncio
